@@ -1,10 +1,11 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Testing Wordle-Clone', () => {
+test.describe('Testing Wordle-Clone', async () => {
     test('should have the heading Wordle', async ({ page }) => {
         await page.goto('http://localhost:3000');
         const heading = page.getByRole('heading');
-        expect(heading).toContainText('Wordle');
+        await page.waitForTimeout(1000);
+        await expect(heading).toContainText('Wordle');
     });
     test('Win Wordle', async ({ page }) => {
         await page.goto('http://localhost:3000/?test=drink');
@@ -15,7 +16,7 @@ test.describe('Testing Wordle-Clone', () => {
             await page.waitForTimeout(1000);
         }
         await page.keyboard.press('Enter');
-
-        await expect(page.locator('.modal h1')).toHaveText('You Win!');
+        await page.waitForTimeout(1000);
+        expect(await page.waitForSelector('.modal h1:has-text("You Win!")')).toBeTruthy();
     });
 });
